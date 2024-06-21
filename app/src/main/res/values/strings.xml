@@ -1,0 +1,7 @@
+<resources>
+  <string name="app_name">Elo Your Game</string>
+  <string name="select_game">SELECT GAME</string>
+  <string name="add_game">ADD GAME</string>
+  <string name="game_name">Game name</string>
+  <string name="create_game">Create game</string>
+</resources>
