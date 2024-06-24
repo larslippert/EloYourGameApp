@@ -1,5 +1,6 @@
 package com.laoves.eloyourgame.presentation.create_game
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -21,9 +22,23 @@ class CreateGameViewModel @Inject constructor(private val createGameUseCase: Cre
 
     fun createGame(game: GameCreate) {
         createGameUseCase(game).onEach { result ->
+            println("RESULT: $result")
             when (result) {
                 is Resource.Success -> {
-                    _state.value = CreateGameState(game = result.data)
+                    when (result.code) {
+                        200 -> {
+                            _state.value = CreateGameState(gameAlreadyExists = true)
+                        }
+                        201 -> {
+                            try {
+                                val game = result.data as Game
+                                _state.value = CreateGameState(game = game)
+                            } catch (e: Exception) {
+                                _state.value =
+                                    CreateGameState(error = "Cannot convert to game: ${e.message}")
+                            }
+                        }
+                    }
                 }
 
                 is Resource.Loading -> {
@@ -31,6 +46,7 @@ class CreateGameViewModel @Inject constructor(private val createGameUseCase: Cre
                 }
 
                 is Resource.Error -> {
+                    Log.d("CREATE GAME ERROR", result.message.toString())
                     _state.value = CreateGameState(error = result.message ?: "Unknown error")
                 }
             }

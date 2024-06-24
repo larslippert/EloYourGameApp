@@ -6,5 +6,6 @@ import com.laoves.eloyourgame.domain.model.elo_your_game.GameCreate
 data class CreateGameState(
     val isLoading: Boolean = false,
     val game: Game? = null,
-    val error: String? = null
+    val error: String? = null,
+    val gameAlreadyExists: Boolean = false,
 )
